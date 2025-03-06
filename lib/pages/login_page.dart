@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'sign_up_page.dart';
 import 'forgot_password_page.dart';
 import 'dashboard_page.dart';
+import '../services/api_service.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -83,15 +86,33 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HomePage()),
-                                  );
+                                  String username = _usernameController.text.trim();
+                                  String password = _passwordController.text.trim();
+
+                                  // Call API for login
+                                  final response = await ApiService().login(username, password);
+
+                                  if (response.containsKey("error")) {
+                                    // Show error message if login fails
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(response["error"]), backgroundColor: Colors.red),
+                                    );
+                                  } else {
+                                    // Show success message and navigate to home page
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Login Successful!"), backgroundColor: Colors.green),
+                                    );
+
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => HomePage()),
+                                    );
+                                  }
                                 }
                               },
+
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green,
                                 padding:

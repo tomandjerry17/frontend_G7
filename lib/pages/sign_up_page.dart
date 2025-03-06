@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart';
@@ -18,6 +20,9 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
+  final String baseUrl =
+      "http://127.0.0.1:8000/api/register/"; // Django API URL
+
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -29,19 +34,48 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
-  void _signUp() {
+  Future<void> _signUp() async {
     if (_formKey.currentState!.validate()) {
-      if (_passwordController.text == _confirmPasswordController.text) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Account created successfully!')),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-        );
-      } else {
+      if (_passwordController.text != _confirmPasswordController.text) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Passwords do not match!')),
+        );
+        return;
+      }
+
+      final Map<String, String> userData = {
+        "first_name": _firstNameController.text,
+        "surname": _surnameController.text,
+        "username": _usernameController.text,
+        "email": _emailController.text,
+        "password": _passwordController.text,
+      };
+
+      try {
+        final response = await http.post(
+          Uri.parse(baseUrl),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(userData),
+        );
+
+        if (response.statusCode == 201) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Account created successfully!')),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+        } else {
+          final errorMessage =
+              jsonDecode(response.body)["error"] ?? "Failed to sign up";
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMessage)),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
         );
       }
     }

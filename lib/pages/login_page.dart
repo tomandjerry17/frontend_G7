@@ -22,9 +22,9 @@ class LoginPage extends StatelessWidget {
 
                 // Logo
                 SizedBox(
-                  width: 180, // Adjust width
-                  height: 300, // Adjust height
-                  child: Image.asset('Assets/Logo.png'),
+                  width: 350, // Adjust width
+                  height: 350, // Adjust height
+                  child: Image.asset('Assets/logo.png'),
                 ),
                 const SizedBox(height: 2), // Adjusted spacing
 
@@ -36,7 +36,7 @@ class LoginPage extends StatelessWidget {
                       children: [
                         TextField(
                           decoration: InputDecoration(
-                            hintText: 'Mobile number or email address',
+                            hintText: 'Username',
                             filled: true,
                             fillColor: Colors.white,
                             border: OutlineInputBorder(

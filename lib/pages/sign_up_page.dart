@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart';
 
@@ -12,8 +13,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
   final _surnameController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _numberController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
@@ -21,8 +22,8 @@ class _SignUpPageState extends State<SignUpPage> {
   void dispose() {
     _firstNameController.dispose();
     _surnameController.dispose();
+    _usernameController.dispose();
     _emailController.dispose();
-    _numberController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -117,6 +118,24 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   SizedBox(height: 16),
                   TextFormField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      hintText: 'Username',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your username';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
                       hintText: 'Email address',
@@ -132,24 +151,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       }
                       if (!value.contains('@')) {
                         return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 16),
-                  TextFormField(
-                    controller: _numberController,
-                    decoration: InputDecoration(
-                      hintText: 'Number',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your number';
                       }
                       return null;
                     },
@@ -216,6 +217,42 @@ class _SignUpPageState extends State<SignUpPage> {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      text: 'Already have an account? ',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontFamily: 'Roboto',
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Login',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color:
+                                Color(0xFF388E3C), // Highlight the login text
+                            fontFamily: 'Roboto',
+                            decoration: TextDecoration
+                                .underline, // Optional: Underline for better visibility
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              // Navigate to the login page
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()),
+                              );
+                            },
+                        ),
+                      ],
                     ),
                   ),
                 ],

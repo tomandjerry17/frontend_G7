@@ -227,7 +227,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: Colors.black54,
                         fontFamily: 'Roboto',
                       ),
                       children: [

@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart';
 import 'sign_up_page.dart';
+import 'password_reset_sent_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -58,9 +59,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(responseData['message'])),
         );
+
+        // Navigate to the Reset Password Page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PasswordResetSentPage()),
+        );
+
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(responseData['error'] ?? 'Something went wrong')),
+          SnackBar(content: Text(responseData['error'] ?? 'No user found with this email.')),
         );
       }
     } catch (e) {
@@ -117,7 +126,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _resetPassword,
+                  onPressed: _resetPassword, 
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF1B5E20),
                     padding:
